@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use clap::ValueEnum;
 use const_format::formatcp;
 
-use super::{Find, LanguageScoper, RawQuery, TSLanguage, TSQuery, TSQueryError, IGNORE};
+use super::{Find, Query, RawQuery, TSLanguage, TSQuery, TSQueryError, IGNORE};
 
 /// A compiled query for the Rust language.
 #[derive(Debug)]
@@ -358,7 +358,7 @@ impl PreparedQuery {
     }
 }
 
-impl LanguageScoper for CompiledQuery {
+impl Query for CompiledQuery {
     fn lang() -> TSLanguage {
         tree_sitter_rust::LANGUAGE.into()
     }

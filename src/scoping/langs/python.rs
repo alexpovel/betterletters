@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use clap::ValueEnum;
 use const_format::formatcp;
 
-use super::{Find, LanguageScoper, RawQuery, TSLanguage, TSQuery, TSQueryError};
+use super::{Find, Query, RawQuery, TSLanguage, TSQuery, TSQueryError};
 use crate::scoping::langs::IGNORE;
 
 /// A compiled query for the Python language.
@@ -189,7 +189,7 @@ impl PreparedQuery {
     }
 }
 
-impl LanguageScoper for CompiledQuery {
+impl Query for CompiledQuery {
     fn lang() -> TSLanguage {
         tree_sitter_python::LANGUAGE.into()
     }

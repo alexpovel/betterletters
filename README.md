@@ -45,10 +45,10 @@ Hello YOU!
 Replacement is always performed first and specified positionally. Any [other
 actions](#actions) are applied after and given as command line flags.
 
-### Multiple scopes
+### Multiple queries
 
-Similarly, more than one scope can be specified: in addition to the regex pattern, a
-[**language grammar-aware**]((https://tree-sitter.github.io/tree-sitter/)) scope can be
+Similarly, more than one query can be specified: in addition to the regex pattern, a
+[**language grammar-aware**]((https://tree-sitter.github.io/tree-sitter/)) query can be
 given, which scopes to **syntactical elements of source code** (think, for example, "all
 bodies of `class` definitions in Python"). If both are given, the regular expression
 pattern is then **only applied *within* that first, language scope**. This enables
@@ -115,9 +115,9 @@ $ cat birds.py | srgn --python 'class' 'def .+:\n\s+[^"\s]{3}' # do not try this
 Note how this does not surface either `from_egg` (has a docstring) or `register_bird`
 (not a method, *`def` outside `class`*).
 
-#### Multiple language scopes
+#### Multiple queries
 
-Language scopes themselves can be specified multiple times as well. For example, in the
+Queries themselves can be specified multiple times as well. For example, in the
 Rust snippet
 
 ```rust file=music.rs
@@ -227,7 +227,7 @@ The anatomy of that invocation is:
   (i.e., only take into consideration) docstrings according to the Python language
   grammar
 - `'(?<!The )GNU ([a-z]+)'` (a [scope](#scopes)) sees only what was already scoped by
-  the previous option, and will narrow it down further. It can never extend the previous
+  the previous query option, and will narrow it down further. It can never extend the previous
   scope. The regular expression scope is applied after any language scope(s).
 
   <!-- markdownlint-disable MD038 -->
@@ -782,7 +782,7 @@ language such as `python`. See [below](#custom-queries) for more on this advance
 
 > [!NOTE]
 >
-> Language scopes are applied *first*, so whatever regex aka main scope you pass, it
+> Queries are applied *first*, so whatever regex aka main scope you pass, it
 > operates on each matched language construct individually.
 
 ##### Prepared queries (sample showcases)
@@ -1493,18 +1493,18 @@ Options (global):
           
           The default is to return the input unchanged (without failure).
 
-  -j, --join-language-scopes
-          Join (logical 'OR') multiple language scopes, instead of intersecting them.
+  -j, --join-language-queries
+          Join (logical 'OR') multiple language queries, instead of intersecting them.
           
-          The default when multiple language scopes are given is to intersect their
-          scopes, left to right. For example, `--go func --go strings` will first
-          scope down to `func` bodies, then look for strings only within those. This
-          flag instead joins (in the set logic sense) all scopes. The example would
-          then scope any `func` bodies, and any strings, anywhere. Language scopers
-          can then also be given in any order.
+          The default when multiple language queries are given is to intersect their
+          resulting scopes, left to right. For example, `--go func --go strings` will
+          first scope down to `func` bodies, then look for strings only within those.
+          This flag instead joins (in the set logic sense) all scopes. The example would
+          then scope any `func` bodies, and any strings, anywhere. Queries can then be
+          given in any order.
           
-          No effect if only a single language scope is given. Also does not affect
-          non-language scopers (regex pattern etc.), which always intersect.
+          No effect if only a single query is given. Also does not affect
+          queries without a target language (regex pattern etc.), which always intersect.
 
   -H, --hidden
           Do not ignore hidden files and directories.
@@ -1533,7 +1533,7 @@ Options (global):
           (if unspecified, defaults to 'error'), and increased according to the number
           of times this flag is given, maxing out at 'trace' verbosity.
 
-Language scopes:
+Queries:
       --c <C>
           Scope C code using a prepared query.
           
@@ -2213,7 +2213,7 @@ at your option.
     The original, core version of `srgn` was merely a Rust rewrite of [a previous,
     existing tool](https://github.com/alexpovel/betterletter), which was *only*
     concerned with the *German* feature. `srgn` then grew from there.
-[^3]: With zero actions and no language scoping provided, `srgn` becomes 'useless', and
+[^3]: With zero actions and no queries provided, `srgn` becomes 'useless', and
     other tools such as ripgrep are much more suitable. That's why an error is emitted
     and input is returned unchanged.
 [^4]: Combined with `--fail-any`, the invocation could be used to fail if any `unsafe`

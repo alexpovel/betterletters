@@ -373,7 +373,7 @@ Heizoelrueckstossabdaempfung.
             "--sorted",
             "--python",
             "function-names",
-            "--glob", // Will override language scoper
+            "--glob", // Will override query
             "subdir/**/*.py",
             "foo",
             "baz"
@@ -386,7 +386,7 @@ Heizoelrueckstossabdaempfung.
         &[
             "--python",
             "function-names",
-            "--glob", // Will override language scoper
+            "--glob", // Will override query
             "subdir/**/*.py",
             "foo",
             "baz"

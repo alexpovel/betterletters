@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use clap::ValueEnum;
 use const_format::formatcp;
 
-use super::{tree_sitter_hcl, LanguageScoper, RawQuery, TSLanguage, TSQuery, TSQueryError};
+use super::{tree_sitter_hcl, Query, RawQuery, TSLanguage, TSQuery, TSQueryError};
 use crate::find::Find;
 use crate::scoping::langs::IGNORE;
 
@@ -332,7 +332,7 @@ impl PreparedQuery {
     }
 }
 
-impl LanguageScoper for CompiledQuery {
+impl Query for CompiledQuery {
     fn lang() -> TSLanguage {
         tree_sitter_hcl::language()
     }

@@ -110,10 +110,8 @@ impl From<String> for RawQuery {
 /// and a result is instead obtained by ignoring unwanted parts of bigger captures.
 pub(super) const IGNORE: &str = "_SRGN_IGNORE";
 
-/// A scoper for a language.
-///
-/// Functions much the same, but provides specific language-related functionality.
-pub trait LanguageScoper: Scoper + Find + Send + Sync {
+/// A query for a language.
+pub trait Query: Scoper + Find + Send + Sync {
     /// The language's tree-sitter language.
     fn lang() -> TSLanguage
     where
@@ -200,20 +198,20 @@ pub trait LanguageScoper: Scoper + Find + Send + Sync {
 
 impl<T> Scoper for T
 where
-    T: LanguageScoper,
+    T: Query,
 {
     fn scope_raw<'viewee>(&self, input: &'viewee str) -> RangesWithContext<'viewee> {
         self.scope_via_query(input).into()
     }
 }
 
-impl Scoper for Box<dyn LanguageScoper> {
+impl Scoper for Box<dyn Query> {
     fn scope_raw<'viewee>(&self, input: &'viewee str) -> RangesWithContext<'viewee> {
         self.as_ref().scope_raw(input)
     }
 }
 
-impl Scoper for &[Box<dyn LanguageScoper>] {
+impl Scoper for &[Box<dyn Query>] {
     /// Allows *multiple* scopers to be applied all at once.
     ///
     /// They are OR'd together in the sense that if *any* of the scopers hit, a

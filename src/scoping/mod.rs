@@ -1,11 +1,5 @@
 //! Items for defining the scope actions are applied within.
 
-use scope::RangesWithContext;
-
-use crate::scoping::scope::ROScopes;
-#[cfg(doc)]
-use crate::scoping::{scope::Scope, view::ScopedView};
-
 /// Fixes for DOS-style line endings.
 pub mod dosfix;
 /// Create scoped views using programming language grammar-aware types.
@@ -18,6 +12,10 @@ pub mod regex;
 pub mod scope;
 /// [`ScopedView`] and its related types.
 pub mod view;
+
+use scope::{ROScopes, RangesWithContext};
+#[cfg(doc)]
+use {scope::Scope, view::ScopedView};
 
 /// An item capable of scoping down a given input into individual scopes.
 pub trait Scoper: Send + Sync {

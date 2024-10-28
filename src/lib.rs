@@ -77,7 +77,7 @@
 //!
 //! Anything implementing [`Scoper`] is eligible for use in
 //! [`ScopedViewBuilder::explode`]. This especially includes the language grammar-aware
-//! types, which are [`LanguageScoper`]s. Those may be used as, for example:
+//! types, which are [`Query`]'s. Those may be used as, for example:
 //!
 //! ```rust
 //! use srgn::scoping::langs::{
@@ -174,7 +174,7 @@ use std::ops::Range;
 use crate::{
     actions::Action,
     scoping::{
-        langs::LanguageScoper,
+        langs::Query,
         view::{ScopedView, ScopedViewBuilder},
         Scoper,
     },

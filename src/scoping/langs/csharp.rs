@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use clap::ValueEnum;
 use const_format::formatcp;
 
-use super::{LanguageScoper, RawQuery, TSLanguage, TSQuery, TSQueryError};
+use super::{Query, RawQuery, TSLanguage, TSQuery, TSQueryError};
 use crate::find::Find;
 use crate::scoping::langs::IGNORE;
 
@@ -108,7 +108,7 @@ impl PreparedQuery {
     }
 }
 
-impl LanguageScoper for CompiledQuery {
+impl Query for CompiledQuery {
     fn lang() -> TSLanguage {
         tree_sitter_c_sharp::LANGUAGE.into()
     }

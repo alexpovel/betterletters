@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use rstest::rstest;
 use serde::{Deserialize, Serialize};
-use srgn::scoping::langs::{c, csharp, go, hcl, python, rust, typescript, LanguageScoper};
+use srgn::scoping::langs::{c, csharp, go, hcl, python, rust, typescript, Query};
 use srgn::scoping::scope::Scope;
 use srgn::scoping::view::ScopedViewBuilder;
 
@@ -818,13 +818,9 @@ impl InScopeLinePart {
     include_str!("c/base.c"),
    c::CompiledQuery::from (c::PreparedQuery::CallExpression),
 )]
-fn test_language_scopers(
-    #[case] snapshot_name: &str,
-    #[case] contents: &str,
-    #[case] lang: impl LanguageScoper,
-) {
+fn test_queries(#[case] snapshot_name: &str, #[case] contents: &str, #[case] query: impl Query) {
     let mut builder = ScopedViewBuilder::new(contents);
-    builder.explode(&lang);
+    builder.explode(&query);
     let view = builder.build();
 
     // Collect only those lines which are in scope. This avoids enormous clutter from

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-# Is found and processed by language scoper
+# Is found and processed by query
 
 # This string is not found and touched: foo
 

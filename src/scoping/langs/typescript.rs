@@ -2,7 +2,7 @@ use std::fmt::Debug;
 
 use clap::ValueEnum;
 
-use super::{Find, LanguageScoper, RawQuery, TSLanguage, TSQuery, TSQueryError};
+use super::{Find, Query, RawQuery, TSLanguage, TSQuery, TSQueryError};
 
 /// A compiled query for the TypeScript language.
 #[derive(Debug)]
@@ -130,7 +130,7 @@ impl PreparedQuery {
     }
 }
 
-impl LanguageScoper for CompiledQuery {
+impl Query for CompiledQuery {
     fn lang() -> TSLanguage {
         tree_sitter_typescript::LANGUAGE_TYPESCRIPT.into()
     }
