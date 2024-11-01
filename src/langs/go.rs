@@ -6,7 +6,7 @@ use const_format::formatcp;
 
 use super::{LanguageScoper, RawQuery, TSLanguage, TSQuery, TSQueryError};
 use crate::find::Find;
-use crate::scoping::langs::IGNORE;
+use crate::langs::IGNORE;
 
 /// A compiled query for the Go language.
 #[derive(Debug)]

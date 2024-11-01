@@ -5,12 +5,12 @@ use itertools::Itertools;
 use log::{debug, trace, warn};
 
 use crate::actions::{self, Action, ActionError};
-use crate::scoping::dosfix::DosFix;
-use crate::scoping::scope::Scope::{In, Out};
+use crate::dosfix::DosFix;
+use crate::scope::Scope::{In, Out};
 #[cfg(doc)]
-use crate::scoping::scope::ScopeContext;
-use crate::scoping::scope::{ROScope, ROScopes, RWScope, RWScopes};
-use crate::scoping::Scoper;
+use crate::scope::ScopeContext;
+use crate::scope::{ROScope, ROScopes, RWScope, RWScopes};
+use crate::Scoper;
 
 /// A view of some input, sorted into parts, which are either [`In`] or [`Out`] of scope
 /// for processing.
@@ -410,9 +410,9 @@ mod tests {
     use rstest::rstest;
 
     use super::ScopedView;
-    use crate::scoping::scope::RWScopes;
-    use crate::scoping::scope::Scope::{self, In, Out};
-    use crate::scoping::view::ScopedViewBuilder;
+    use crate::scope::RWScopes;
+    use crate::scope::Scope::{self, In, Out};
+    use crate::view::ScopedViewBuilder;
     use crate::RegexPattern;
 
     #[rstest]
@@ -523,7 +523,7 @@ mod tests {
     )]
     fn test_squeeze(#[case] input: &str, #[case] pattern: RegexPattern, #[case] expected: &str) {
         let mut builder = ScopedViewBuilder::new(input);
-        builder.explode(&crate::scoping::regex::Regex::new(pattern));
+        builder.explode(&crate::regex::Regex::new(pattern));
         let mut view = builder.build();
 
         view.squeeze();

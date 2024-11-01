@@ -36,7 +36,7 @@ For local development, there isn't much to prepare:
    are "all comments" or "strings", which make sense as a baseline and are supported by
    virtually all languages. Feel free to go wild. An example for a more involved query
    is for [Python's
-   `staticmethod`s](https://github.com/alexpovel/srgn/blob/da2580a85c2101e91889519fcba11e876f865249/src/scoping/langs/python.rs#L148-L157).
+   `staticmethod`s](https://github.com/alexpovel/srgn/blob/da2580a85c2101e91889519fcba11e876f865249/src/langs/python.rs#L148-L157).
    These more complex queries are what can make `srgn` more uniquely useful (offer
    functionality otherwise hardly attainable). The README contains
    [guidance](./README.md#custom-queries) on how get started writing these queries.

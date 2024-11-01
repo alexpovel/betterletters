@@ -4,7 +4,7 @@ use clap::ValueEnum;
 use const_format::formatcp;
 
 use super::{Find, LanguageScoper, RawQuery, TSLanguage, TSQuery, TSQueryError};
-use crate::scoping::langs::IGNORE;
+use crate::langs::IGNORE;
 
 /// A compiled query for the Python language.
 #[derive(Debug)]

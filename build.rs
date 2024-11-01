@@ -19,7 +19,7 @@ mod hcl {
     /// <https://github.com/tree-sitter-grammars/tree-sitter-hcl> is available on
     /// <https://crates.io> and updated to a high enough `tree-sitter` version**.
     pub fn build() {
-        let src_dir = std::path::Path::new("src/scoping/langs/tree_sitter_hcl/upstream-main/src");
+        let src_dir = std::path::Path::new("src/langs/tree_sitter_hcl/upstream-main/src");
 
         let mut c_config = cc::Build::new();
         c_config.include(src_dir);

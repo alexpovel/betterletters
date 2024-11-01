@@ -7,7 +7,7 @@ use log::{debug, trace};
 
 use super::regex::CaptureGroup;
 use crate::ranges::Ranges;
-use crate::scoping::scope::Scope::{In, Out};
+use crate::scope::Scope::{In, Out};
 
 /// Indicates whether a given string part is in scope.
 #[derive(Debug, Clone, PartialEq, Eq)]

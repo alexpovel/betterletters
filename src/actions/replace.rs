@@ -6,7 +6,7 @@ use unescape::unescape;
 use variables::{inject_variables, VariableExpressionError};
 
 use super::{Action, ActionError};
-use crate::scoping::scope::ScopeContext;
+use crate::scope::ScopeContext;
 
 /// Items for dealing with variables in replacement values.
 pub mod variables;
@@ -17,7 +17,7 @@ pub mod variables;
 ///
 /// ```rust
 /// use srgn::RegexPattern;
-/// use srgn::scoping::{view::ScopedViewBuilder, regex::Regex};
+/// use srgn::{view::ScopedViewBuilder, regex::Regex};
 ///
 /// // Replacing invalid characters in identifiers
 /// let scoper = Regex::new(RegexPattern::new(r"[^a-zA-Z0-9]+").unwrap());

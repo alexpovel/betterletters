@@ -2,9 +2,9 @@ use std::ops::Range;
 
 use rstest::rstest;
 use serde::{Deserialize, Serialize};
-use srgn::scoping::langs::{c, csharp, go, hcl, python, rust, typescript, LanguageScoper};
-use srgn::scoping::scope::Scope;
-use srgn::scoping::view::ScopedViewBuilder;
+use srgn::langs::{c, csharp, go, hcl, python, rust, typescript, LanguageScoper};
+use srgn::scope::Scope;
+use srgn::view::ScopedViewBuilder;
 
 /// A type that when serialized, will visually highlight the portions of a line which
 /// were matched.

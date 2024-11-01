@@ -1,5 +1,5 @@
 use proptest::prelude::*;
-use srgn::scoping::view::ScopedViewBuilder;
+use srgn::view::ScopedViewBuilder;
 
 use crate::properties::DEFAULT_NUMBER_OF_TEST_CASES;
 

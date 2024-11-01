@@ -4,7 +4,7 @@ use std::fmt;
 
 use log::trace;
 
-use crate::scoping::regex::CaptureGroup;
+use crate::regex::CaptureGroup;
 
 type Variables<'a> = HashMap<CaptureGroup, &'a str>;
 

@@ -1,6 +1,6 @@
 use proptest::prelude::*;
-use srgn::scoping::regex::Regex;
-use srgn::scoping::view::ScopedViewBuilder;
+use srgn::regex::Regex;
+use srgn::view::ScopedViewBuilder;
 use srgn::RegexPattern;
 
 use crate::properties::DEFAULT_NUMBER_OF_TEST_CASES;

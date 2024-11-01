@@ -1,12 +1,12 @@
 use log::trace;
 
 use super::scope::RangesWithContext;
-use crate::scoping::literal::Literal;
-use crate::scoping::{ROScopes, Scoper};
+use crate::literal::Literal;
+use crate::{ROScopes, Scoper};
 #[cfg(doc)]
 use crate::{
     actions::Deletion,
-    scoping::scope::Scope::{In, Out},
+    scope::Scope::{In, Out},
 };
 
 /// Fixes `\r` being [`In`] scope while `\n` is actually [`Out`].
@@ -64,9 +64,9 @@ mod tests {
     use rstest::rstest;
 
     use super::*;
-    use crate::scoping::scope::Scope::{In, Out};
-    use crate::scoping::scope::{RWScope, RWScopes};
-    use crate::scoping::view::ScopedView;
+    use crate::scope::Scope::{In, Out};
+    use crate::scope::{RWScope, RWScopes};
+    use crate::view::ScopedView;
 
     #[rstest]
     #[case("a", ScopedView::new(RWScopes(vec![RWScope(In(Borrowed("a"), None))])))]
@@ -76,7 +76,7 @@ mod tests {
     #[case("a\r", ScopedView::new(RWScopes(vec![RWScope(In(Borrowed("a"), None)), RWScope(Out("\r"))])))]
     #[case("a\r\n", ScopedView::new(RWScopes(vec![RWScope(In(Borrowed("a"), None)), RWScope(Out("\r")), RWScope(In(Borrowed("\n"), None))])))]
     fn test_dos_fix(#[case] input: &str, #[case] expected: ScopedView<'_>) {
-        let mut builder = crate::scoping::view::ScopedViewBuilder::new(input);
+        let mut builder = crate::view::ScopedViewBuilder::new(input);
         let dosfix = DosFix;
         builder.explode(&dosfix);
         let view = builder.build();

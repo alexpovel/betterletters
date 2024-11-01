@@ -21,8 +21,8 @@
 //!
 //! ```rust
 //! use std::borrow::Cow::{Borrowed as B};
-//! use srgn::scoping::view::ScopedViewBuilder;
-//! use srgn::scoping::scope::{Scope::{In}, RWScope, RWScopes};
+//! use srgn::view::ScopedViewBuilder;
+//! use srgn::scope::{Scope::{In}, RWScope, RWScopes};
 //!
 //! let input = "Hello, world!!";
 //! let builder = ScopedViewBuilder::new(input);
@@ -44,9 +44,9 @@
 //! ```rust
 //! use std::borrow::Cow::{Borrowed as B};
 //! use std::collections::HashMap;
-//! use srgn::scoping::view::ScopedViewBuilder;
-//! use srgn::scoping::scope::{Scope::{In, Out}, RWScope, RWScopes, ScopeContext::CaptureGroups};
-//! use srgn::scoping::regex::{CaptureGroup::Numbered as CGN, Regex};
+//! use srgn::view::ScopedViewBuilder;
+//! use srgn::scope::{Scope::{In, Out}, RWScope, RWScopes, ScopeContext::CaptureGroups};
+//! use srgn::regex::{CaptureGroup::Numbered as CGN, Regex};
 //! use srgn::RegexPattern;
 //!
 //! let input = "Hello, world!!";
@@ -80,11 +80,11 @@
 //! types, which are [`LanguageScoper`]s. Those may be used as, for example:
 //!
 //! ```rust
-//! use srgn::scoping::langs::{
+//! use srgn::langs::{
 //!     python::{CompiledQuery, PreparedQuery},
 //!     RawQuery
 //! };
-//! use srgn::scoping::view::ScopedViewBuilder;
+//! use srgn::view::ScopedViewBuilder;
 //!
 //! let input = "def foo(bar: int) -> int: return bar + 1  # Do a thing";
 //! let query = CompiledQuery::from(PreparedQuery::Comments);
@@ -108,8 +108,8 @@
 //! easiest is going through the provided associated functions directly:
 //!
 //! ```rust
-//! use srgn::scoping::view::ScopedViewBuilder;
-//! use srgn::scoping::regex::Regex;
+//! use srgn::view::ScopedViewBuilder;
+//! use srgn::regex::Regex;
 //! use srgn::RegexPattern;
 //!
 //! let input = "Hello, world!!";
@@ -132,7 +132,7 @@
 //!
 //! ```rust
 //! # #[cfg(feature = "symbols")] {
-//! use srgn::scoping::view::ScopedViewBuilder;
+//! use srgn::view::ScopedViewBuilder;
 //!
 //! let input = "Assume π <= 4 < α -> β, ∀ x ∈ ℝ";
 //!
@@ -154,7 +154,7 @@
 //!
 //! ```rust
 //! # #[cfg(feature = "german")] {
-//! use srgn::scoping::view::ScopedViewBuilder;
+//! use srgn::view::ScopedViewBuilder;
 //! use srgn::actions::German;
 //!
 //! let input = "Der Ueberflieger-Kaefer! 🛩️";
@@ -167,27 +167,39 @@
 //! # }
 //! ```
 
+/// Main components around [`Action`]s.
+pub mod actions;
+/// Fixes for DOS-style line endings.
+pub mod dosfix;
+/// Utilities around finding files.
+pub mod find;
+/// Create scoped views using programming language grammar-aware types.
+pub mod langs;
+/// Create scoped views using string literals.
+pub mod literal;
+/// Components to work with collections of [`Range`]s.
+pub mod ranges;
+/// Create scoped views using regular expressions.
+pub mod regex;
+/// [`Scope`] and its various wrappers.
+pub mod scope;
+/// [`ScopedView`] and its related types.
+pub mod view;
+
 #[cfg(doc)]
 use std::ops::Range;
 
 #[cfg(doc)]
 use crate::{
     actions::Action,
-    scoping::{
-        langs::LanguageScoper,
-        view::{ScopedView, ScopedViewBuilder},
-        Scoper,
-    },
+    langs::LanguageScoper,
+    scope::Scope,
+    view::{ScopedView, ScopedViewBuilder},
 };
 
-/// Main components around [`Action`]s.
-pub mod actions;
-/// Utilities around finding files.
-pub mod find;
-/// Components to work with collections of [`Range`]s.
-pub mod ranges;
-/// Main components around [`ScopedView`].
-pub mod scoping;
+use scope::RangesWithContext;
+
+use crate::scope::ROScopes;
 
 /// Pattern signalling global scope, aka matching entire inputs.
 pub const GLOBAL_SCOPE: &str = r".*";
@@ -195,3 +207,29 @@ pub const GLOBAL_SCOPE: &str = r".*";
 /// The type of regular expression used throughout the crate. Abstracts away the
 /// underlying implementation.
 pub use fancy_regex::Regex as RegexPattern;
+
+/// An item capable of scoping down a given input into individual scopes.
+pub trait Scoper: Send + Sync {
+    /// Scope the given `input`.
+    ///
+    /// After application, the returned scopes are a collection of either in-scope or
+    /// out-of-scope parts of the input. Assembling them back together should yield the
+    /// original input.
+    fn scope<'viewee>(&self, input: &'viewee str) -> ROScopes<'viewee> {
+        let ranges = self.scope_raw(input);
+
+        ROScopes::from_raw_ranges(input, ranges)
+    }
+
+    /// Scope the given `input`, returning raw ranges.
+    ///
+    /// Raw ranges are those not turned into [`ROScopes`] yet.
+    fn scope_raw<'viewee>(&self, input: &'viewee str) -> RangesWithContext<'viewee>;
+}
+
+// https://www.reddit.com/r/rust/comments/droxdg/why_arent_traits_impld_for_boxdyn_trait/
+impl Scoper for Box<dyn Scoper> {
+    fn scope_raw<'viewee>(&self, input: &'viewee str) -> RangesWithContext<'viewee> {
+        self.as_ref().scope_raw(input)
+    }
+}

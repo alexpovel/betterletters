@@ -23,11 +23,11 @@ use srgn::actions::{
 };
 #[cfg(feature = "symbols")]
 use srgn::actions::{Symbols, SymbolsInversion};
-use srgn::scoping::langs::LanguageScoper;
-use srgn::scoping::literal::{Literal, LiteralError};
-use srgn::scoping::regex::{Regex, RegexError};
-use srgn::scoping::view::ScopedViewBuilder;
-use srgn::scoping::Scoper;
+use srgn::langs::LanguageScoper;
+use srgn::literal::{Literal, LiteralError};
+use srgn::regex::{Regex, RegexError};
+use srgn::view::ScopedViewBuilder;
+use srgn::Scoper;
 use tree_sitter::QueryError as TSQueryError;
 
 // We have `LanguageScoper: Scoper`, but we cannot upcast
@@ -950,7 +950,7 @@ mod cli {
     use clap::builder::ArgPredicate;
     use clap::{ArgAction, Command, CommandFactory, Parser};
     use clap_complete::{generate, Generator, Shell};
-    use srgn::scoping::langs::{
+    use srgn::langs::{
         c, csharp, go, hcl, python, rust, typescript, LanguageScoper, RawQuery,
     };
     use srgn::GLOBAL_SCOPE;

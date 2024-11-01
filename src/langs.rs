@@ -11,7 +11,7 @@ use super::Scoper;
 use crate::find::Find;
 use crate::ranges::Ranges;
 #[cfg(doc)]
-use crate::scoping::{
+use crate::{
     scope::Scope::{In, Out},
     view::ScopedViewBuilder,
 };

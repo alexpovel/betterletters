@@ -26,7 +26,7 @@ pub use symbols::{inversion::Symbols as SymbolsInversion, Symbols};
 pub use titlecase::Titlecase;
 pub use upper::Upper;
 
-use crate::scoping::scope::ScopeContext;
+use crate::scope::ScopeContext;
 
 /// An action in the processing pipeline.
 ///

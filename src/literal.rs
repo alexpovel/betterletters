@@ -72,9 +72,9 @@ mod tests {
     use rstest::rstest;
 
     use super::*;
-    use crate::scoping::scope::Scope::{In, Out};
-    use crate::scoping::scope::{RWScope, RWScopes};
-    use crate::scoping::view::ScopedView;
+    use crate::scope::Scope::{In, Out};
+    use crate::scope::{RWScope, RWScopes};
+    use crate::view::ScopedView;
 
     #[rstest]
     #[case(
@@ -154,7 +154,7 @@ mod tests {
         #[case] literal: &str,
         #[case] expected: ScopedView<'_>,
     ) {
-        let mut builder = crate::scoping::view::ScopedViewBuilder::new(input);
+        let mut builder = crate::view::ScopedViewBuilder::new(input);
         let literal = Literal::try_from(literal.to_owned()).unwrap();
         builder.explode(&literal);
         let actual = builder.build();

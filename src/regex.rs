@@ -135,9 +135,9 @@ mod tests {
     use rstest::rstest;
 
     use super::*;
-    use crate::scoping::scope::Scope::{In, Out};
-    use crate::scoping::scope::{RWScope, RWScopes};
-    use crate::scoping::view::{ScopedView, ScopedViewBuilder};
+    use crate::scope::Scope::{In, Out};
+    use crate::scope::{RWScope, RWScopes};
+    use crate::view::{ScopedView, ScopedViewBuilder};
 
     /// Get 'Capture Group 0', the default which is always present.
     #[allow(clippy::unnecessary_wraps)]
@@ -470,7 +470,7 @@ mod tests {
         use rand::Rng;
 
         use super::*;
-        use crate::scoping::scope::ROScope;
+        use crate::scope::ROScope;
 
         fn generate_random_regex(mut rng: &mut rand::rngs::ThreadRng) -> Option<RegexPattern> {
             let atoms: [&str; 7] = [".", "\\d", "\\D", "\\w", "\\W", "\\s", "\\S"];
