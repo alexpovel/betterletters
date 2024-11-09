@@ -1,6 +1,6 @@
 [package]
 name = "srgn"
-version = "0.13.4"
+version = "0.14.0"
 edition = "2021"
 authors = ["Alex Povel <rust@alexpovel.de>"]
 description = "A grep-like tool which understands source code syntax and allows for manipulation in addition to search"
