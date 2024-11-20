@@ -4,6 +4,7 @@
 #[cfg(test)]
 #[cfg(feature = "all")]
 mod tests {
+    use std::collections::VecDeque;
     use std::path::{Path, PathBuf};
 
     use anyhow::Context;
@@ -45,6 +46,7 @@ mod tests {
         false,
         &[
             "A",
+            "--",
             "B",
         ],
         Some(r"A;  B 😫"),
@@ -54,6 +56,7 @@ mod tests {
         false,
         &[
             "A",
+            "--",
             "B",
         ],
         None,
@@ -63,6 +66,7 @@ mod tests {
         false,
         &[
             r"\W",
+            "--",
             "B",
         ],
         Some(r"A;  B 😫"),
@@ -156,6 +160,7 @@ Heizoelrueckstossabdaempfung.
             "--go",
             "comments",
             "[fF]izz",
+            "--",
             "🤡",
         ],
         Some(include_str!("langs/go/fizzbuzz.go")),
@@ -233,6 +238,7 @@ Heizoelrueckstossabdaempfung.
         false,
         &[
             "A",
+            "--",
             "X",
         ],
         Some("A\nB"),
@@ -243,6 +249,7 @@ Heizoelrueckstossabdaempfung.
         &[
             "--only-matching",
             "A",
+            "--",
             "X",
         ],
         Some("A\nB"),
@@ -253,6 +260,7 @@ Heizoelrueckstossabdaempfung.
         &[
             "--line-numbers",
             "A",
+            "--",
             "X",
         ],
         Some("A\nB"),
@@ -264,6 +272,7 @@ Heizoelrueckstossabdaempfung.
             "--only-matching",
             "--line-numbers",
             "A",
+            "--",
             "X",
         ],
         Some("A\nB"),
@@ -298,19 +307,24 @@ Heizoelrueckstossabdaempfung.
         // (inside `src/main.rs` etc.).
         let mut cmd = get_cmd();
 
-        let args: Vec<String> = args.iter().map(|&s| s.to_owned()).collect();
+        let mut args: VecDeque<String> = args.iter().map(|&s| s.to_owned()).collect();
 
-        cmd.args(args.clone());
-        cmd.args(["--threads", "1"]); // Be deterministic
+        // Be deterministic for testing purposes. We have to push this awkwardly, as the
+        // last argument might be strongly positional, and nothing else is allowed to
+        // come after it.
+        args.push_front("1".into());
+        args.push_front("--threads".into());
+
         if let Some(stdin) = stdin {
             cmd.write_stdin(stdin);
         } else {
-            cmd.args(
-                // Override; `Command` is detected as providing stdin but we're working on
-                // files here.
-                ["--stdin-override-to", "false"],
-            );
+            // Override; `Command` is detected as providing stdin but we're working on
+            // files here.
+            args.push_front("false".into());
+            args.push_front("--stdin-override-to".into());
         }
+
+        cmd.args(args.clone());
 
         let output = cmd.output().expect("failed to execute process");
 
@@ -332,7 +346,7 @@ Heizoelrueckstossabdaempfung.
             insta::assert_yaml_snapshot!(
                 snapshot_name,
                 CommandSnap {
-                    args,
+                    args: args.into(),
                     stdin: stdin.map(|s| s.split_inclusive('\n').map(ToOwned::to_owned).collect_vec()),
                     stdout: stdout.split_inclusive('\n').map(ToOwned::to_owned).collect_vec(),
                     exit_code,
@@ -351,6 +365,7 @@ Heizoelrueckstossabdaempfung.
             "--glob",
             "**/*.py",
             "foo",
+            "--",
             "baz"
         ],
         false,
@@ -364,6 +379,7 @@ Heizoelrueckstossabdaempfung.
             "--python",
             "function-names",
             "foo",
+            "--",
             "baz"
         ],
         false,
@@ -379,6 +395,7 @@ Heizoelrueckstossabdaempfung.
             "--glob", // Will override language scoper
             "subdir/**/*.py",
             "foo",
+            "--",
             "baz"
         ],
         false,
@@ -393,6 +410,7 @@ Heizoelrueckstossabdaempfung.
             "--glob", // Will override language scoper
             "subdir/**/*.py",
             "foo",
+            "--",
             "baz"
         ],
         // NOT `--sorted`, so not deterministic; use to test that directories are

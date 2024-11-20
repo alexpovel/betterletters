@@ -12,6 +12,7 @@ args:
   - "--glob"
   - subdir/**/*.py
   - foo
+  - "--"
   - baz
 stdin: ~
 stdout:

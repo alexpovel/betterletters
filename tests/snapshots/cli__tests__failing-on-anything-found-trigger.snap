@@ -1,10 +1,13 @@
 ---
 source: tests/cli.rs
-expression: "CommandSnap {\n    args,\n    stdin: stdin.split_inclusive('\\n').map(|s| s.to_owned()).collect_vec(),\n    stdout: stdout.split_inclusive('\\n').map(|s| s.to_owned()).collect_vec(),\n    exit_code,\n}"
+expression: "CommandSnap\n{\n    args: args.into(), stdin:\n    stdin.map(|s|\n    s.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec()), stdout:\n    stdout.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec(),\n    exit_code,\n}"
 info:
-  stderr: "Error: Failed to process stdin\n\nCaused by:\n    Some input was in scope, and explicit failure requested.\n"
+  stderr:
+    - "Error: Error applying: Some input was in scope"
 ---
 args:
+  - "--threads"
+  - "1"
   - "--fail-any"
   - X
 stdin:

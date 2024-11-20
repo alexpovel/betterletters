@@ -10,6 +10,7 @@ args:
   - "--python"
   - function-names
   - foo
+  - "--"
   - baz
 stdin: ~
 stdout:

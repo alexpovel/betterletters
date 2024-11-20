@@ -28,7 +28,7 @@ are good to go.
 The most simple `srgn` usage works [similar to `tr`](#comparison-with-tr):
 
 ```bash
-$ echo 'Hello World!' | srgn '[wW]orld' 'there' # replacement
+$ echo 'Hello World!' | srgn '[wW]orld' -- 'there' # replacement
 Hello there!
 ```
 
@@ -38,7 +38,7 @@ Matches for the regular expression pattern `'[wW]orld'` (the *scope*) are replac
 ```bash
 $ echo 'Hello World!' | srgn '[wW]orld' # zero actions: input returned unchanged
 Hello World!
-$ echo 'Hello World!' | srgn --upper '[wW]orld' 'you' # two actions: replacement, afterwards uppercasing
+$ echo 'Hello World!' | srgn --upper '[wW]orld' -- 'you' # two actions: replacement, afterwards uppercasing
 Hello YOU!
 ```
 

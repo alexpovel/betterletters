@@ -1239,7 +1239,7 @@ mod cli {
         /// compatibility with `tr`.
         ///
         /// If given, will run before any other action.
-        #[arg(value_name = "REPLACEMENT", env, verbatim_doc_comment)]
+        #[arg(value_name = "REPLACEMENT", env, verbatim_doc_comment, last = true)]
         pub replace: Option<String>,
         /// Uppercase anything in scope.
         #[arg(short, long, env, verbatim_doc_comment)]

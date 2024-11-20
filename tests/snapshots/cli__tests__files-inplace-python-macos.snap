@@ -10,6 +10,7 @@ args:
   - "--glob"
   - "**/*.py"
   - foo
+  - "--"
   - baz
 stdin: ~
 stdout:
