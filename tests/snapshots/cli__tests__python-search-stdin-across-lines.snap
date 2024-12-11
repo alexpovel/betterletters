@@ -1,8 +1,8 @@
 ---
 source: tests/cli.rs
-expression: "CommandSnap {\n    args,\n    stdin: stdin.map(|s|\n            s.split_inclusive('\\n').map(|s| s.to_owned()).collect_vec()),\n    stdout: stdout.split_inclusive('\\n').map(|s| s.to_owned()).collect_vec(),\n    exit_code,\n}"
+expression: "CommandSnap\n{\n    args, stdin:\n    stdin.map(|s|\n    s.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec()), stdout:\n    stdout.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec(),\n    exit_code,\n}"
 info:
-  stderr: ""
+  stderr: []
 ---
 args:
   - "--python"
@@ -221,6 +221,6 @@ stdin:
   - "    match_statement(1)\n"
   - "    asyncio.run(async_function())\n"
 stdout:
-  - "62:    @classmethod\n"
-  - "63:    def class_method(cls) -> None:\n"
+  - "62:4-17:    @classmethod\n"
+  - "63:0-20:    def class_method(cls) -> None:\n"
 exit_code: 0

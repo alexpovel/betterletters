@@ -13,18 +13,12 @@ args:
   - baz
 stdin: ~
 stdout:
-  - "1.py\n"
-  - "1:# This string is found and touched: foo\n"
-  - "1:# This string is found and touched: baz\n"
-  - "4:def foo(bar: int) -> int:\n"
-  - "4:def baz(bar: int) -> int:\n"
-  - "\n"
-  - "subdir/2.py\n"
-  - "1:def foo(bar: int) -> int:\n"
-  - "1:def baz(bar: int) -> int:\n"
-  - "\n"
-  - "subdir/subdir/3.py\n"
-  - "1:def foo(bar: int) -> int:\n"
-  - "1:def baz(bar: int) -> int:\n"
-  - "\n"
+  - "1.py:1:36-39:# This string is found and touched: foo\n"
+  - "1.py:1:36-39:# This string is found and touched: baz\n"
+  - "1.py:4:4-7:def foo(bar: int) -> int:\n"
+  - "1.py:4:4-7:def baz(bar: int) -> int:\n"
+  - "subdir/2.py:1:4-7:def foo(bar: int) -> int:\n"
+  - "subdir/2.py:1:4-7:def baz(bar: int) -> int:\n"
+  - "subdir/subdir/3.py:1:4-7:def foo(bar: int) -> int:\n"
+  - "subdir/subdir/3.py:1:4-7:def baz(bar: int) -> int:\n"
 exit_code: 0

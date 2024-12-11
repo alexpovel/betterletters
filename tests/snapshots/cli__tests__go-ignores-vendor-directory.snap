@@ -1,6 +1,6 @@
 ---
 source: tests/cli.rs
-expression: "CommandSnap {\n    args,\n    stdin: None,\n    stdout: stdout.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec(),\n    exit_code,\n}"
+expression: "CommandSnap\n{\n    args, stdin: None, stdout:\n    stdout.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec(),\n    exit_code,\n}"
 info:
   stderr: []
 ---
@@ -9,7 +9,5 @@ args:
   - comments
 stdin: ~
 stdout:
-  - "found.go\n"
-  - "3:// This is found\n"
-  - "\n"
+  - "found.go:3:0-16:// This is found\n"
 exit_code: 0

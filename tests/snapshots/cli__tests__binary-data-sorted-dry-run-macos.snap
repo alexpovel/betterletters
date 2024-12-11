@@ -13,8 +13,6 @@ args:
   - gone
 stdin: ~
 stdout:
-  - "subdir/valid-utf8\n"
-  - "2:unique string for precise searching: 0a1a09c8-2995-4ac5-9d60-01a0f02920e8\n"
-  - "2:unique string for precise searching: gone\n"
-  - "\n"
+  - "subdir/valid-utf8:2:37-73:unique string for precise searching: 0a1a09c8-2995-4ac5-9d60-01a0f02920e8\n"
+  - "subdir/valid-utf8:2:37-41:unique string for precise searching: gone\n"
 exit_code: 0

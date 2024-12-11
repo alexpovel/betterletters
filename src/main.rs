@@ -4,8 +4,9 @@
 //! deals with CLI argument handling, I/O, threading, and more.
 
 use std::error::Error;
+use std::fmt::Write as FmtWrite;
 use std::fs::{self, File};
-use std::io::{self, stdout, Read, Write};
+use std::io::{self, stdout, IsTerminal, Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::{env, fmt};
@@ -27,6 +28,7 @@ use srgn::iterext::ParallelZipExt;
 use srgn::scoping::langs::LanguageScoper;
 use srgn::scoping::literal::{Literal, LiteralError};
 use srgn::scoping::regex::{Regex, RegexError};
+use srgn::scoping::scope::{RWScope, Scope};
 use srgn::scoping::view::ScopedViewBuilder;
 use srgn::scoping::Scoper;
 use tree_sitter::QueryError as TSQueryError;
@@ -300,6 +302,7 @@ fn handle_actions_on_stdin(
         general_scoper,
         language_scopers,
         pipeline,
+        None,
     )?;
 
     stdout().lock().write_all(destination.as_bytes())?;
@@ -601,6 +604,8 @@ fn process_path(
         return Err(PathProcessingError::InvalidFile);
     }
 
+    let is_terminal = stdout().is_terminal();
+
     debug!("Processing path: {:?}", path);
 
     let (new_contents, filesize, changed) = {
@@ -613,6 +618,7 @@ fn process_path(
 
         let mut destination = String::with_capacity(source.len());
 
+        let p = path.display().to_string();
         let changed = apply(
             global_options,
             standalone_action,
@@ -621,6 +627,7 @@ fn process_path(
             general_scoper,
             language_scopers,
             pipeline,
+            if is_terminal { None } else { Some(&p) },
         )?;
 
         (destination, filesize, changed)
@@ -631,12 +638,21 @@ fn process_path(
 
     if search_mode {
         if !new_contents.is_empty() {
-            writeln!(
-                stdout,
-                "{}\n{}",
-                path.display().to_string().magenta(),
-                &new_contents
-            )?;
+            if is_terminal {
+                writeln!(
+                    stdout,
+                    "{}\n{}",
+                    path.display().to_string().magenta(),
+                    &new_contents
+                )?;
+            } else {
+                write!(
+                    stdout,
+                    "{}",
+                    // path.display().to_string().magenta(),
+                    &new_contents
+                )?;
+            }
         }
     } else {
         if filesize > 0 && new_contents.is_empty() {
@@ -683,6 +699,7 @@ fn process_path(
 /// TODO: The way this interacts with [`process_path`] etc. is just **awful** spaghetti
 /// of the most imperative, procedural kind. Refactor needed.
 #[allow(clippy::borrowed_box)] // Used throughout, not much of a pain
+#[allow(clippy::too_many_arguments)] // FIXME: this function does way too much
 fn apply(
     global_options: &cli::GlobalOptions,
     standalone_action: StandaloneAction,
@@ -693,6 +710,7 @@ fn apply(
     general_scoper: &Box<dyn Scoper>,
     language_scopers: &[Box<dyn LanguageScoper>],
     pipeline: Pipeline<'_>,
+    line_prefix: Option<&str>,
 ) -> std::result::Result<bool, ApplicationError> {
     debug!("Building view.");
     let mut builder = ScopedViewBuilder::new(source);
@@ -743,10 +761,24 @@ fn apply(
             for line in lines {
                 if !global_options.only_matching || line.has_any_in_scope() {
                     if global_options.line_numbers {
+                        if let Some(p) = line_prefix {
+                            write!(destination, "{p}:").unwrap();
+                        }
+
+                        let x = line
+                            .scopes_with_ranges()
+                            .into_iter()
+                            .filter(|(_, s)| matches!(s, RWScope(Scope::In(_, _))))
+                            .map(|(r, _)| (r.start, r.end))
+                            .map(|(start, end)| format!("{start}-{end}"))
+                            .collect_vec()
+                            .join(";");
+
                         // `ColoredString` needs to be 'evaluated' to do anything; make sure
                         // to not forget even if this is moved outside of `format!`.
                         #[allow(clippy::to_string_in_format_args)]
-                        destination.push_str(&format!("{}:", i.to_string().green().to_string()));
+                        destination
+                            .push_str(&format!("{}:{x}:", i.to_string().green().to_string()));
                     }
 
                     destination.push_str(&line.to_string());

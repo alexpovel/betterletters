@@ -1,8 +1,8 @@
 ---
 source: tests/cli.rs
-expression: "CommandSnap {\n    args,\n    stdin: stdin.map(|s|\n            s.split_inclusive('\\n').map(|s| s.to_owned()).collect_vec()),\n    stdout: stdout.split_inclusive('\\n').map(|s| s.to_owned()).collect_vec(),\n    exit_code,\n}"
+expression: "CommandSnap\n{\n    args, stdin:\n    stdin.map(|s|\n    s.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec()), stdout:\n    stdout.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec(),\n    exit_code,\n}"
 info:
-  stderr: ""
+  stderr: []
 ---
 args:
   - "--python"
@@ -221,18 +221,18 @@ stdin:
   - "    match_statement(1)\n"
   - "    asyncio.run(async_function())\n"
 stdout:
-  - "24:    print(f\"Global test_var is now {test_var}\")\n"
-  - "66:        print(f\"Class variable is now {cls.class_var}\")\n"
-  - "72:        print(f\"Instance variable is {self.instance_var}\")\n"
-  - "86:This is a\n"
-  - "91:multiline_f_string = f\"\"\"This is a\n"
-  - "96:raw_string = r\"This is a raw string with no special treatment for \\n\"\n"
-  - "97:bytes_string = b\"This is a bytes string\"\n"
-  - "98:bytes_string = rf\"This is a raw f-string with {raw_string}\"\n"
-  - "118:            raise ZeroDivisionError(\"Division by zero\")\n"
-  - "127:        print(\"This will always be printed\")\n"
-  - "140:    print(f\"Nonlocal variable is {nonlocal_var}\")\n"
-  - "158:        print(\"test_var is greater than 5\")\n"
-  - "160:        print(\"test_var is 5 or less\")\n"
-  - "165:        print(f\"Counter is {counter}\")\n"
+  - "24:28-30:    print(f\"Global test_var is now {test_var}\")\n"
+  - "66:31-33:        print(f\"Class variable is now {cls.class_var}\")\n"
+  - "72:34-36:        print(f\"Instance variable is {self.instance_var}\")\n"
+  - "86:2-4;5-7:This is a\n"
+  - "91:27-29;30-32:multiline_f_string = f\"\"\"This is a\n"
+  - "96:17-19;20-22:raw_string = r\"This is a raw string with no special treatment for \\n\"\n"
+  - "97:19-21;22-24:bytes_string = b\"This is a bytes string\"\n"
+  - "98:20-22;23-25:bytes_string = rf\"This is a raw f-string with {raw_string}\"\n"
+  - "118:40-42:            raise ZeroDivisionError(\"Division by zero\")\n"
+  - "127:17-19:        print(\"This will always be printed\")\n"
+  - "140:30-32:    print(f\"Nonlocal variable is {nonlocal_var}\")\n"
+  - "158:24-26:        print(\"test_var is greater than 5\")\n"
+  - "160:24-26:        print(\"test_var is 5 or less\")\n"
+  - "165:24-26:        print(f\"Counter is {counter}\")\n"
 exit_code: 0

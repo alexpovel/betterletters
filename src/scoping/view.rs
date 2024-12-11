@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 use std::fmt;
+use std::ops::Range;
 
 use itertools::Itertools;
 use log::{debug, trace, warn};
@@ -36,6 +37,22 @@ impl<'viewee> ScopedView<'viewee> {
     #[must_use]
     pub const fn scopes(&self) -> &RWScopes<'viewee> {
         &self.scopes
+    }
+
+    /// docs...
+    #[must_use]
+    pub fn scopes_with_ranges(&self) -> Vec<(Range<usize>, &RWScope<'viewee>)> {
+        let mut res = Vec::with_capacity(self.scopes.0.len());
+        let mut start = 0;
+
+        for scope in &self.scopes().0 {
+            let s: &str = scope.into();
+            let end = start + s.len();
+            res.push((start..end, scope));
+            start = end;
+        }
+
+        res
     }
 
     /// Return a builder for a view of the given input.

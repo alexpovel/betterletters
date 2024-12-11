@@ -1,6 +1,6 @@
 ---
 source: tests/cli.rs
-expression: "CommandSnap {\n    args,\n    stdin: stdin.map(|s|\n            s.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec()),\n    stdout: stdout.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec(),\n    exit_code,\n}"
+expression: "CommandSnap\n{\n    args, stdin:\n    stdin.map(|s|\n    s.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec()), stdout:\n    stdout.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec(),\n    exit_code,\n}"
 info:
   stderr: []
 ---
@@ -13,5 +13,5 @@ stdin:
   - "A\n"
   - B
 stdout:
-  - "1:X\n"
+  - "1:0-1:X\n"
 exit_code: 0

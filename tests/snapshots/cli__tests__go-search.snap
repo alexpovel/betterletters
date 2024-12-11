@@ -1,8 +1,8 @@
 ---
 source: tests/cli.rs
-expression: "CommandSnap {\n    args,\n    stdin: stdin.map(|s|\n            s.split_inclusive('\\n').map(|s| s.to_owned()).collect_vec()),\n    stdout: stdout.split_inclusive('\\n').map(|s| s.to_owned()).collect_vec(),\n    exit_code,\n}"
+expression: "CommandSnap\n{\n    args, stdin:\n    stdin.map(|s|\n    s.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec()), stdout:\n    stdout.split_inclusive('\\n').map(ToOwned::to_owned).collect_vec(),\n    exit_code,\n}"
 info:
-  stderr: ""
+  stderr: []
 ---
 args:
   - "--go"
@@ -37,8 +37,8 @@ stdin:
   - "\tfizzBuzz(100)\n"
   - "}\n"
 stdout:
-  - "5:// fizzBuzz prints the numbers from 1 to a specified limit.\n"
-  - "6:// For multiples of 3, it prints \"Fizz\" instead of the number,\n"
-  - "8:// it prints \"FizzBuzz\".\n"
-  - "25:\t// Run the FizzBuzz function for numbers from 1 to 100\n"
+  - "5:3-7:// fizzBuzz prints the numbers from 1 to a specified limit.\n"
+  - "6:34-38:// For multiples of 3, it prints \"Fizz\" instead of the number,\n"
+  - "8:14-18:// it prints \"FizzBuzz\".\n"
+  - "25:12-16:\t// Run the FizzBuzz function for numbers from 1 to 100\n"
 exit_code: 0
